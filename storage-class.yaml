@@ -1,0 +1,12 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: mongo-data-xfs
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: io1
+  iopsPerGB: "10"
+  fstype: xfs
+  encrypted: "true"
+reclaimPolicy: Retain
+allowVolumeExpansion: true

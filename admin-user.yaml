@@ -1,0 +1,21 @@
+apiVersion: mongodb.com/v1
+kind: MongoDBUser
+metadata:
+  name: admin-user
+spec:
+  passwordSecretKeyRef:
+    name: admin-user-password
+    key: password
+  username: admin-user
+  db: admin
+  mongodbResourceRef:
+    name: rs-0
+  roles:
+    - db: admin
+      name: clusterAdmin
+    - db: admin
+      name: readWriteAnyDatabase
+    - db: admin
+      name: dbAdminAnyDatabase
+    - db: admin
+      name: userAdminAnyDatabase

@@ -1,0 +1,26 @@
+# https://www.mongodb.com/docs/kubernetes-operator/upcoming/tutorial/cert-manager-integration/#create-certificates-for-your-mongodb-resources
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rs-0-certificate
+  namespace: mongodb
+spec:
+  secretName: mdb-rs-0-cert
+  dnsNames:
+  # <pod-name>.<metadata.name>-svc.<namespace>.svc.cluster.local
+  - rs-0-0
+  - rs-0-0.rs-0-svc.mongodb.svc.cluster.local
+  - rs-0-1
+  - rs-0-1.rs-0-svc.mongodb.svc.cluster.local
+  - rs-0-2
+  - rs-0-2.rs-0-svc.mongodb.svc.cluster.local
+  duration: 240h0m0s
+  renewBefore: 120h0m0s
+  issuerRef:
+    name: ca-issuer
+  usages:
+  - server auth
+  - client auth
+  subject:
+    organizations:
+    - MongoDB

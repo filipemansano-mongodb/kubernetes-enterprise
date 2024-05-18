@@ -1,0 +1,6 @@
+.env
+certificates/**/*.key
+certificates/**/*.pem
+certificates/**/*.srl
+certificates/**/*.csr
+certificates/**/*.crt
