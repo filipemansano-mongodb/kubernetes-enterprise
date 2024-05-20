@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pykmip-server
+  namespace: kmip
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pykmip-server
+  template:
+    metadata:
+      labels:
+        app: pykmip-server
+    spec:
+      containers:
+      - name: pykmip-server
+        image: localhost:5000/pykmip-server
+        ports:
+        - containerPort: 5696

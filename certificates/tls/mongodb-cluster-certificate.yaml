@@ -5,9 +5,13 @@ metadata:
   name: rs-0-certificate
   namespace: mongodb
 spec:
-  secretName: mdb-rs-0-cert
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 4096
   dnsNames:
-  # <pod-name>.<metadata.name>-svc.<namespace>.svc.cluster.local
   - rs-0-0
   - rs-0-0.rs-0-svc.mongodb.svc.cluster.local
   - rs-0-1
@@ -15,12 +19,12 @@ spec:
   - rs-0-2
   - rs-0-2.rs-0-svc.mongodb.svc.cluster.local
   duration: 240h0m0s
-  renewBefore: 120h0m0s
   issuerRef:
-    name: ca-issuer
+    name: mongodb-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  renewBefore: 120h0m0s
+  secretName: mdb-rs-0-cert
   usages:
   - server auth
   - client auth
-  subject:
-    organizations:
-    - MongoDB

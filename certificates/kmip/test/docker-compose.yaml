@@ -1,0 +1,31 @@
+# for testing purposes
+version: '3.8'
+services:
+  mongodb:
+    image: mongodb/mongodb-enterprise-server:latest
+    container_name: mdb-ent-server
+    volumes:
+      - ../client.pem:/kmip/client.pem
+      - ../ca_cert.pem:/kmip/ca.pem
+      - ./mongod.conf:/etc/mongod.conf
+    command: ["mongod", "--config", "/etc/mongod.conf", "--bind_ip_all"]
+    networks:
+      - my_network
+    depends_on:
+      - pykmip-server
+
+  pykmip-server:
+    image: pykmip-server:latest
+    container_name: pykmip-server
+    volumes:
+      - ../ca_cert.pem:/app/ca.pem
+      - ../server_cert.pem:/app/server.pem
+      - ../server_key.pem:/app/server.key
+      - ../pykmip-server.py:/app/pykmip-server.py
+    ports:
+      - "5696:5696"
+    networks:
+      - my_network
+
+networks:
+  my_network:

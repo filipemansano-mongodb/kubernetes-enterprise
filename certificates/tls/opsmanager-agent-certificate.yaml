@@ -11,7 +11,9 @@ spec:
   - automation
   duration: 240h0m0s
   issuerRef:
-    name: ca-issuer
+    name: mongodb-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
   renewBefore: 120h0m0s
   usages:
   - digital signature

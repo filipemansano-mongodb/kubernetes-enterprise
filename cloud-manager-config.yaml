@@ -4,6 +4,6 @@ metadata:
   name: cloud-manager-config
   namespace: mongodb
 data:
-  projectName: cloud-manager
+  projectName: <project-name>
   baseUrl: https://cloud.mongodb.com
-  orgId: 
+  orgId: <org-id>

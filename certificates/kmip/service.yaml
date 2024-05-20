@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pykmip-server
+  namespace: kmip
+spec:
+  selector:
+    app: pykmip-server
+  ports:
+  - protocol: TCP
+    port: 5696
+    targetPort: 5696
