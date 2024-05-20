@@ -103,27 +103,24 @@ kubectl apply -f cloud-manager-config.yaml --namespace mongodb
 ### 4. Setup Credentials
 Refer to the [Credentials README](credentials/readme.md) for instructions on setting up credentials.
 
-### 5. Setup TLS
-Refer to the [TLS README](certificates/tls/readme.md) for instructions on setting up certificates.
+### 5. Setup Certificates
+Refer to the [TLS README](certificates/readme.md) for instructions on setting up certificates.
 
-### 6. Setup KMIP
-Refer to the [KMIP README](certificates/kmip/readme.md) for instructions on setting up certificates for encryption at rest.
-
-### 7. Setup Storage (OPTIONAL)
+### 6. Setup Storage (OPTIONAL)
 Refer to the [Storage README](storage/readme.md) for instructions on setting up storage.
 
-### 8. Create the Replica-set
+### 7. Create the Replica-set
 ```sh
 kubectl apply -f replica-set.yaml --namespace mongodb
 ```
 
-#### 8.1. Check Pod Scheduling
+#### 7.1. Check Pod Scheduling
 Verify that the pods were scheduled as expected:
 ```sh
 kubectl get pods -o wide --namespace mongodb
 ```
 
-### 9. Create the users
+### 8. Create the users
 For testing purposes, passwords are literal
 ```sh
 kubectl create secret generic user1-secret --from-literal="password=123456" --namespace mongodb

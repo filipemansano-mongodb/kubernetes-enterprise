@@ -65,3 +65,9 @@ kubectl create configmap mongodb-ca-issuer \
     --from-literal=mms-ca.crt="$secret_content" \ 
     --namespace mongodb
 ```
+
+### 5. Setup TLS
+Refer to the [TLS README](tls/readme.md) for instructions on setting up certificates.
+
+### 6. Setup KMIP
+Refer to the [KMIP README](kmip/readme.md) for instructions on setting up certificates for encryption at rest.
