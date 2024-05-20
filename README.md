@@ -130,8 +130,15 @@ kubectl create secret generic user3-secret --from-literal="password=123456" --na
 kubectl apply -f users.yaml --namespace mongodb
 ```
 
+### 9. Setup Monitoring (OPTIONAL)
+Refer to the [Monitoring README](Monitoring/readme.md) for instructions on setting up Monitoring with Prometheus.
+
 # Clean
 ```sh
 kubectl delete MongoDB rs-0 --namespace mongodb
 kubectl delete pvc --all --namespace mongodb
 ```
+
+# References
+ - [K8s Operator Specification](https://www.mongodb.com/docs/kubernetes-operator/master/reference/k8s-operator-specification/)
+ - [MongoDB K8s Samples](https://github.com/mongodb/mongodb-enterprise-kubernetes/tree/master/samples/mongodb) 
