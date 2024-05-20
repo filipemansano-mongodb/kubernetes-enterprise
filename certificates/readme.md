@@ -1,4 +1,7 @@
 # Configuring Certificates
+
+> NOTE: In this part we will create self-signed certificates, if you already have the certificates in your company you can use them instead of creating new ones
+
 This guide outlines the steps to configure certificates setting up Cert-Manager, generating self-signed certificates, creating a CA issuer and creating certificates.
 
 ## Files Overview

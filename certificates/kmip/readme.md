@@ -1,5 +1,7 @@
 # Encrypt Data Using a Key Management Service
 
+> NOTE: In this part, we will create a local KMIP server for testing purposes. If your cloud provider provides a KMS, you can skip this part and use your cloud's KMIP server
+
 This README will guide you through the process of setting up KMIP (Key Management Interoperability Protocol) encryption to activate encryption at rest in MongoDB. KMIP provides a standardized protocol for communication between key management services and encryption systems.
 
 ## Steps
