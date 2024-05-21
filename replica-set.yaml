@@ -136,11 +136,11 @@ spec:
     #Automation Agent log rotation
     startupOptions:
       maxLogFiles: "30"
-      maxLogFileDurationHrs: "1"
-      maxUncompressedLogFiles: "2"
+      maxLogFileDurationHrs: "24"
+      maxUncompressedLogFiles: "5"
 
   backup:
-    mode: enabled
+    mode: disabled
     snapshotSchedule:
       snapshotIntervalHours: 12
       snapshotRetentionDays: 2
@@ -155,7 +155,7 @@ spec:
   additionalMongodConfig:
     net:
       ssl:
-        mode: preferTLS
+        mode: requireTLS
     # https://www.mongodb.com/pt-br/docs/kubernetes-operator/stable/encryption-at-rest/
     security:
       enableEncryption: true
