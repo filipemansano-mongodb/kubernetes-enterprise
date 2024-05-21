@@ -100,11 +100,11 @@ Edit the `cloud-manager-config.yaml` fill the `orgId` and `projectName` properti
 ```sh
 kubectl apply -f cloud-manager-config.yaml --namespace mongodb
 ```
-### 4. Setup Credentials
-Refer to the [Credentials README](credentials/readme.md) for instructions on setting up credentials.
-
-### 5. Setup Certificates
+### 4. Setup Certificates
 Refer to the [TLS README](certificates/readme.md) for instructions on setting up certificates.
+
+### 5. Setup Credentials
+Refer to the [Credentials README](credentials/readme.md) for instructions on setting up credentials.
 
 ### 6. Setup Storage (OPTIONAL)
 Refer to the [Storage README](storage/readme.md) for instructions on setting up storage.
@@ -120,14 +120,44 @@ Verify that the pods were scheduled as expected:
 kubectl get pods -o wide --namespace mongodb
 ```
 
+Expect result:
+```sh
+NAME                                           READY   STATUS
+mongodb-enterprise-operator-69f48b84b8-ncqs9   1/1     Running
+rs-0-0                                         1/1     Running
+rs-0-1                                         1/1     Running 
+rs-0-2                                         1/1     Running
+```
+It may take a few minutes for all pods up
+
 ### 8. Create the users
-For testing purposes, passwords are literal
+For testing purposes, passwords are literal, you can use the external secret technique to store the users password
 ```sh
 kubectl create secret generic user1-secret --from-literal="password=123456" --namespace mongodb
 kubectl create secret generic user2-secret --from-literal="password=123456" --namespace mongodb
 kubectl create secret generic user3-secret --from-literal="password=123456" --namespace mongodb
 
 kubectl apply -f users.yaml --namespace mongodb
+```
+
+### 9. Connect
+
+1 - Get users credentials and connection string
+```sh
+kubectl get secret rs-0-admin-admin --namespace mongodb -o json | jq -r '.data | with_entries(.value |= @base64d)'
+```
+
+2 - Entrer in hosts
+```sh
+kubectl exec -it -n mongodb rs-0-0 -c mongodb-enterprise-database -- bash
+```
+
+3 - connect
+```sh
+/var/lib/mongodb-mms-automation/mongosh-linux-x86_64-2.2.4/bin/mongosh \
+    --tls \
+    --tlsCAFile /mongodb-automation/tls/ca/ca-pem \
+    "mongodb+srv://admin:123456@rs-0-svc.mongodb.svc.cluster.local/admin?ssl=true"
 ```
 
 ### 9. Setup Monitoring (OPTIONAL)

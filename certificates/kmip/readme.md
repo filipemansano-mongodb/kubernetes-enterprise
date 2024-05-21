@@ -15,7 +15,7 @@ openssl genpkey -algorithm RSA -out ca_key.pem -pkeyopt rsa_keygen_bits:4096
 
 #### 1.2. Create the CA Certificate
 ```sh
-openssl req -x509 -new -nodes -key ca_key.pem -sha256 -days 1024 -out ca_cert.pem -subj "/C=BR/ST=Sao Paulo/L=Sao Paulo/O=YourOrg/OU=IT/CN=mdb.local"
+openssl req -x509 -new -nodes -key ca_key.pem -sha256 -days 1024 -out ca_cert.pem -config openssl.cnf
 ```
 
 #### 1.3. Generate the Private Key for the Server
@@ -50,7 +50,7 @@ openssl x509 -req -in client_csr.pem -CA ca_cert.pem -CAkey ca_key.pem -CAcreate
 
 #### 1.9. Combine Client Key and Certificate
 ```sh
-type client_key.pem client_cert.pem > client.pem
+cat client_key.pem client_cert.pem > client.pem
 ```
 
 ### 2. Build Local PyKmip Server with Docker
@@ -59,7 +59,7 @@ This section outlines the steps to set up a local PyKmip server using Docker and
 
 #### 2.2 Build Docker Image
 ```sh
-    docker build -t pykmip-server .
+docker build -t pykmip-server .
 ```
 
 #### 2.3 Run local Docker registry
@@ -71,9 +71,6 @@ kubectl get service --namespace kube-system
 
 #### 2.4 Tag and Push Docker Image
 ```sh
-# get minikube-ip
-minikube ip
-
 # open in a new terminal
 kubectl port-forward --namespace kube-system service/registry 5000:80
 

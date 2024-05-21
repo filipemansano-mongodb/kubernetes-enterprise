@@ -35,8 +35,8 @@ Create a generic secret in Kubernetes containing your AWS credentials:
 
 ```sh
 kubectl create secret generic aws-credentials \
-  --from-literal="accessKeyID=<YOUR-AWS-ACCESS-KEY>" \
-  --from-literal="secretAccessKey=<YOUR-AWS-SECRET-ACCESS-KEY>" \
+  --from-literal="accessKeyID=" \
+  --from-literal="secretAccessKey=" \
   --namespace external-secret
 ```
 
@@ -56,7 +56,7 @@ kubectl apply -f atlas-secret.yaml --namespace external-secret
 
 Apply the configurations for the Prometheus secret:
 ```sh
-kubectl apply -f prometheus-secret.yaml --namespace mongodb
+kubectl apply -f prometheus-secret.yaml --namespace external-secret
 ```
 
 ### 6. Install mirrors
@@ -73,8 +73,10 @@ helm install mirrors \
 ### 7. Mirror atlas credentials to MongoDB namespace
 As secrets can only be accessed within the same namespace, to make the atlas credentials available in the mongo namespace, we need to mirror this secret within the external-secret namespace to the mongodb namespace, to do this apply the command below
 
+> Note: Go to the monitoring readme and create the prometheus namespace by adding it by operator using helm before mirroring the secrets below
+
 ```sh
-kubectl apply -f mirror-atlas-secret.yaml --namespace external-secret
+kubectl apply -f mirror-atlas-secret.yaml -f mirror-prometheus-secret.yaml --namespace external-secret
 ```
 
 Now your MongoDB Atlas credentials are securely managed on Kubernetes and AWS.

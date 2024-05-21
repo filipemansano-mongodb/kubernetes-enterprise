@@ -65,7 +65,7 @@ $secret_content  = [System.Text.Encoding]::UTF8.GetString([System.Convert]::From
 
 kubectl create configmap mongodb-ca-issuer \
     --from-literal=ca-pem="$secret_content" \
-    --from-literal=mms-ca.crt="$secret_content" \ 
+    --from-literal=mms-ca.crt="$secret_content" \
     --namespace mongodb
 ```
 

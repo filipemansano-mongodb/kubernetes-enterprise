@@ -15,10 +15,10 @@ spec:
   - basicAuth:
       password:
         key: password
-        name: metrics-endpoint-creds
+        name: prometheus-password
       username:
         key: username
-        name: metrics-endpoint-creds
+        name: prometheus-password
     # This port matches what we created in our MongoDB Service.
     port: prometheus
     # If using HTTPS enabled endpoint, change scheme to https

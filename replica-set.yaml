@@ -111,7 +111,7 @@ spec:
           storage: 1Gi
           storageClass: standard
         logs:
-          storage: 500M
+          storage: 1Gi
           storageClass: standard
   
   # This will create a TLS enabled Replica Set, which means that all the traffic
