@@ -17,13 +17,13 @@ spec:
 
   persistent: true
 
-  #prometheus:
-  #  passwordSecretRef:
+  prometheus:
+    passwordSecretRef:
       # SecretRef to a Secret with a 'password' entry on it.
-  #    name: prometheus-password
+      name: prometheus-password
 
     # change this value to your Prometheus username
-  #  username: <prom-username>
+    username: prometheus-username
 
     # Enables HTTPS on the prometheus scrapping endpoint
     # This should be a reference to a Secret type kuberentes.io/tls
@@ -155,7 +155,7 @@ spec:
   additionalMongodConfig:
     net:
       ssl:
-        mode: requireSSL
+        mode: preferTLS
     # https://www.mongodb.com/pt-br/docs/kubernetes-operator/stable/encryption-at-rest/
     security:
       enableEncryption: true

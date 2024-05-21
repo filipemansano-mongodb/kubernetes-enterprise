@@ -18,7 +18,7 @@ helm install prometheus prometheus-community/kube-prometheus-stack \
 kubectl apply -f service-monitor.yaml --namespace mongodb
 ```
 
-### 3. Forward grafana port to access locally
+### 3. Forward grafana and prometheus port to access locally
 
 username: admin
 
@@ -28,5 +28,6 @@ kubectl get secret --namespace prometheus prometheus-grafana -o jsonpath="{.data
 ```
 
 ```sh
- kubectl port-forward --namespace prometheus service/prometheus-grafana 8080:80
+kubectl port-forward --namespace prometheus service/prometheus-grafana 8080:80 &
+kubectl port-forward --namespace prometheus service/prometheus-operated 8081:9090 
 ```
