@@ -45,4 +45,5 @@ kubectl describe pvc restored-mongodb-pvc --namespace mongodb
 ```
 
 # References
+ - [CSI Driver and Volume Snapshots](https://minikube.sigs.k8s.io/docs/tutorials/volume_snapshots_and_csi/)
  - [Back up Instances with Journal Files on Separate Volume or without Journaling](https://www.mongodb.com/docs/manual/tutorial/backup-with-filesystem-snapshots/#back-up-instances-with-journal-files-on-separate-volume-or-without-journaling)
