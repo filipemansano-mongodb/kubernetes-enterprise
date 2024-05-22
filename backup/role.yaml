@@ -1,0 +1,33 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: mongodb
+  name: backup-role-rbac
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+- apiGroups: ["snapshot.storage.k8s.io"]
+  resources: ["volumesnapshots"]
+  verbs: ["get", "list", "create"]
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  namespace: mongodb
+  name: backup-role-rbac
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: mongodb
+roleRef:
+  kind: Role
+  name: backup-role-rbac
+  apiGroup: rbac.authorization.k8s.io

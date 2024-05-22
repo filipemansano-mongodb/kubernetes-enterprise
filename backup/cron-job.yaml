@@ -1,0 +1,110 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mongodb-backup
+  namespace: mongodb
+spec:
+  schedule: "0 2 * * *" # Executa todo dia às 2 AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mongodb-backup
+            image: bitnami/kubectl:latest
+            env:
+              - name: MONGOSH_PATH
+                value: "/var/lib/mongodb-mms-automation/mongosh-linux-x86_64-2.2.4/bin/mongosh"
+              - name: SSL_PATH
+                value: "/mongodb-automation/tls/ca/ca-pem"
+              - name: REPLICA_SET_NAME
+                value: "rs-0"
+              - name: ADMIN_USER
+                value: "admin"
+            command:
+              - /bin/bash
+              - -c
+              - |
+                set -e
+
+                echo "getting secrets from admin user..."
+                CREDS_JSON=$(kubectl get secret $REPLICA_SET_NAME-$ADMIN_USER-admin --namespace mongodb -o json)
+
+                echo "collect username..."
+                USERNAME=$(echo $CREDS_JSON | grep -o '"username": "[^"]*' | grep -o '[^"]*$' | base64 --decode)
+
+                echo "collect password..."
+                PASSWORD=$(echo $CREDS_JSON | grep -o '"password": "[^"]*' | grep -o '[^"]*$' | base64 --decode)
+
+                echo "collect replica set..."
+                CONN_REPLICA_SET=$(echo $CREDS_JSON | grep -o '"connectionString.standardSrv": "[^"]*' | grep -o '[^"]*$' | base64 --decode)
+                
+                echo "getting first pod..."
+                FIRST_POD=$(kubectl get pods -l "app=$REPLICA_SET_NAME-svc" -n mongodb -o jsonpath='{.items[*].metadata.name}' | awk '{print $1}')
+                if [ -z "$FIRST_POD" ]; then
+                  echo "Error: No pod found with label app=$REPLICA_SET_NAME-svc"
+                  exit 1
+                fi
+
+                echo "getting host..."
+                TARGET_TYPE="SECONDARY"
+                TARGET_HOST=$(kubectl exec -n mongodb $FIRST_POD -c mongodb-enterprise-database -- bash -c "$MONGOSH_PATH --tls --tlsCAFile $SSL_PATH --eval 'rs.status().members.filter(member => member.stateStr == \"$TARGET_TYPE\")[0].name' ${CONN_REPLICA_SET}" | grep "$REPLICA_SET_NAME-svc")
+                if [ -z "$TARGET_HOST" ]; then
+                  echo "Error: Failed to get target host"
+                  exit 1
+                fi
+
+                TARGET_POD=$(echo $TARGET_HOST |awk -F'.' '{print $1}')
+                if [ -z "$TARGET_POD" ]; then
+                  echo "Error: Failed to extract target pod name"
+                  exit 1
+                fi
+
+                CONN_HOST="mongodb://$USERNAME:$PASSWORD@$TARGET_HOST/admin?ssl=true"
+
+                unlock_db() {
+                  echo "Unlocking the database..."
+                  kubectl exec -it -n mongodb $TARGET_POD -c mongodb-enterprise-database -- bash -c "$MONGOSH_PATH --tls --tlsCAFile $SSL_PATH --eval 'db.fsyncUnlock()' ${CONN_HOST}"
+                }
+
+                trap unlock_db EXIT
+
+                echo "Locking the database..."
+                kubectl exec -it -n mongodb $TARGET_POD -c mongodb-enterprise-database -- bash -c "$MONGOSH_PATH --tls --tlsCAFile $SSL_PATH --eval 'db.fsyncLock()' ${CONN_HOST}"
+
+                echo "Creating snapshot..."
+
+                PVC_NAME="data-$TARGET_POD"
+                TIMESTAMP=$(date +%Y%m%d%H%M%S)
+                SNAPSHOT_NAME="mongodb-data-snapshot-$TIMESTAMP"
+
+                kubectl apply -f - <<EOF
+                apiVersion: snapshot.storage.k8s.io/v1
+                kind: VolumeSnapshot
+                metadata:
+                  name: $SNAPSHOT_NAME
+                  namespace: mongodb
+                spec:
+                  volumeSnapshotClassName: csi-hostpath-snapclass
+                  source:
+                    persistentVolumeClaimName: $PVC_NAME
+                EOF
+
+                echo "Waiting for snapshot to be ready..."
+                for i in {1..30}; do
+                  SNAPSHOT_STATUS=$(kubectl get volumesnapshot $SNAPSHOT_NAME -n mongodb -o jsonpath='{.status.readyToUse}')
+                  if [ "$SNAPSHOT_STATUS" == "true" ]; then
+                    echo "Snapshot created and ready to use."
+                    break
+                  fi
+                  echo "Snapshot not ready yet. Checking again in 10 seconds..."
+                  sleep 10
+                done
+
+                if [ "$SNAPSHOT_STATUS" != "true" ]; then
+                  echo "Snapshot creation failed or timed out."
+                  exit 1
+                fi
+
+                echo "Backup process completed successfully."
+          restartPolicy: OnFailure

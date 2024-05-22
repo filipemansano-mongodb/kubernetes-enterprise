@@ -106,8 +106,8 @@ Refer to the [TLS README](certificates/readme.md) for instructions on setting up
 ### 5. Setup Credentials
 Refer to the [Credentials README](credentials/readme.md) for instructions on setting up credentials.
 
-### 6. Setup Storage (OPTIONAL)
-Refer to the [Storage README](storage/readme.md) for instructions on setting up storage.
+### 6. Setup Backup
+Refer to the [Backup README](backup/readme.md) for instructions on setting up backup.
 
 ### 7. Create the Replica-set
 ```sh
@@ -142,6 +142,7 @@ kubectl apply -f users.yaml --namespace mongodb
 
 ### 9. Connect
 
+#### 9.1 Inside kubernetes envrionment
 1 - Get users credentials and connection string
 ```sh
 kubectl get secret rs-0-admin-admin --namespace mongodb -o json | jq -r '.data | with_entries(.value |= @base64d)'
@@ -160,12 +161,14 @@ kubectl exec -it -n mongodb rs-0-0 -c mongodb-enterprise-database -- bash
     "mongodb+srv://admin:123456@rs-0-svc.mongodb.svc.cluster.local/admin?ssl=true"
 ```
 
+
 ### 9. Setup Monitoring (OPTIONAL)
 Refer to the [Monitoring README](Monitoring/readme.md) for instructions on setting up Monitoring with Prometheus.
 
 # Clean
 ```sh
 kubectl delete MongoDB rs-0 --namespace mongodb
+kubectl delete volumesnapshot --all --namespace mongodb
 kubectl delete pvc --all --namespace mongodb
 ```
 

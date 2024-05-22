@@ -3,6 +3,9 @@ kind: MongoDB
 metadata:
   name: rs-0
   namespace: mongodb
+  labels:
+    type: database
+    app: mongodb
 spec:
   members: 3
   version: "7.0.9-ent"
@@ -105,8 +108,8 @@ spec:
       multiple:
         data:
           storage: 5Gi
-          storageClass: standard
-          #storageClass: xfs-storage-class
+          storageClass: csi-hostpath-sc
+          #storageClass: standard
         journal:
           storage: 1Gi
           storageClass: standard
