@@ -1,0 +1,24 @@
+{
+  "name": "telemetry",
+  "version": "1.0.0",
+  "description": "This guide outlines the steps to configure Velero for backups in a Minikube environment using MinIO as the storage backend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@opentelemetry/api": "^1.0.0",
+    "@opentelemetry/instrumentation": "^0.48.0",
+    "@opentelemetry/instrumentation-http": "^0.48.0",
+    "@opentelemetry/instrumentation-mongodb": "^0.32.0",
+    "@opentelemetry/sdk-trace-node": "^1.0.0",
+    "@opentelemetry/sdk-trace-base": "^1.0.0",
+    "@opentelemetry/semantic-conventions": "^1.23.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.51.1",
+    "body-parser": "^1.20.2",
+    "mongodb": "^6.6.2",
+    "express": "^4.19.2"
+  }
+}

@@ -12,6 +12,10 @@ helm install prometheus prometheus-community/kube-prometheus-stack \
   --namespace prometheus \
   --create-namespace
 ```
+#### 1.1 Mirror credentials
+```sh
+kubectl apply -f ../credentials/mirror-prometheus-secret.yaml
+```
 
 ### 2. Create the service monitor
 ```sh
@@ -29,5 +33,5 @@ kubectl get secret --namespace prometheus prometheus-grafana -o jsonpath="{.data
 
 ```sh
 kubectl port-forward --namespace prometheus service/prometheus-grafana 8080:80 &
-kubectl port-forward --namespace prometheus service/prometheus-operated 8081:9090 
+kubectl port-forward --namespace prometheus service/prometheus-operated 8081:9090 & 
 ```

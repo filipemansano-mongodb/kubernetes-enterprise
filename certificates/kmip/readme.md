@@ -75,7 +75,7 @@ kubectl get service --namespace kube-system
 kubectl port-forward --namespace kube-system service/registry 5000:80
 
 ## open in a new terminal
-docker run --rm -it --network=host alpine ash -c "apk add socat && socat TCP-LISTEN:5000,reuseaddr,fork TCP:host.docker.internal:5000"
+docker run --rm -it --network=host alpine sh -c "apk add socat && socat TCP-LISTEN:5000,reuseaddr,fork TCP:host.docker.internal:5000"
 
 # push image
 docker tag pykmip-server localhost:5000/pykmip-server

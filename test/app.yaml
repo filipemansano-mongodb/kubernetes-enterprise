@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-client
+  namespace: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-client
+  template:
+    metadata:
+      labels:
+        app: mongo-client
+    spec:
+      containers:
+      - name: mongo-client
+        image: localhost:5000/app-test:latest
+        ports:
+        - containerPort: 3000

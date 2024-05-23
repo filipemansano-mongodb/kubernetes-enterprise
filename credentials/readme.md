@@ -54,11 +54,6 @@ Apply the configurations for the Atlas secret:
 kubectl apply -f atlas-secret.yaml --namespace external-secret
 ```
 
-Apply the configurations for the Prometheus secret:
-```sh
-kubectl apply -f prometheus-secret.yaml --namespace external-secret
-```
-
 ### 6. Install mirrors
 Add the Helm repository for mirrors and install it:
 

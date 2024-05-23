@@ -60,6 +60,23 @@ The package manager for Kubernetes
 1. Instalation
     - MacOS: `brew install helm`
 
+### AWS CLi
+Cli to create resources on aws like secrets and s3 buckets
+1. Instalation
+    - https://docs.aws.amazon.com/pt_br/cli/latest/userguide/getting-started-install.html
+2. Setup
+    - type `aws configure`
+    ```sh
+    AWS Access Key ID [None]: <your-acess-key>
+    AWS Secret Access Key [None]:  <your-secret-acess-key>
+    Default region name [None]: us-east-1
+    Default output format [None]:
+    ```
+
+### JQ
+1. Instalation
+    - https://jqlang.github.io/jq/download/
+    
 ## Steps
 
 Follow these steps to set up MongoDB Enterprise on Kubernetes:
