@@ -47,8 +47,8 @@ spec:
                 fi
 
                 echo "getting host..."
-                TARGET_TYPE="SECONDARY"
-                TARGET_HOST=$(kubectl exec -n mongodb $FIRST_POD -c mongodb-enterprise-database -- bash -c "$MONGOSH_PATH --tls --tlsCAFile $SSL_PATH --eval 'rs.status().members.filter(member => member.stateStr == \"$TARGET_TYPE\")[0].name' ${CONN_REPLICA_SET}" | grep "$REPLICA_SET_NAME-svc")
+                TARGET_TYPE="HIDDEN"
+                TARGET_HOST=$(kubectl exec -n mongodb $FIRST_POD -c mongodb-enterprise-database -- bash -c "$MONGOSH_PATH --tls --tlsCAFile $SSL_PATH --eval 'rs.config().members.filter(member => member.tags.nodeType == \"$TARGET_TYPE\")[0].name' ${CONN_REPLICA_SET}" | grep "$REPLICA_SET_NAME-svc")
                 if [ -z "$TARGET_HOST" ]; then
                   echo "Error: Failed to get target host"
                   exit 1

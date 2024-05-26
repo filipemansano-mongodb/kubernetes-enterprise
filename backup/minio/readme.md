@@ -61,12 +61,12 @@ kubectl -n minio-operator get secret console-sa-secret -o jsonpath="{.data.token
 
 #### Forward the port to access the operator locally
 ```sh
-kubectl --namespace minio-operator port-forward svc/console 9090:9090
+kubectl --namespace minio-operator port-forward svc/console 9090:9090 &
 ```
 
 - Open the page in your browser: `http://localhost:9090/namespaces/minio-operator/tenants/minio-tenant-1/configuration`
 - Copy the `MINIO_ROOT_PASSWORD` and `MINIO_ROOT_USER` values
-- Forward the port of tenant console: `kubectl --namespace minio-operator port-forward svc/minio-tenant-1-console 9095:9090`
+- Forward the port of tenant console: `kubectl --namespace minio-operator port-forward svc/minio-tenant-1-console 9095:9090 &`
 - Access the page `http://localhost:9095/buckets`
 - Create a new bucket with the name `velero-mdb-ent-test`
 

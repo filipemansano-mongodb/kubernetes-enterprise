@@ -126,12 +126,15 @@ Refer to the [Credentials README](credentials/readme.md) for instructions on set
 ### 6. Setup Backup
 Refer to the [Backup README](backup/readme.md) for instructions on setting up backup.
 
-### 7. Create the Replica-set
+### 7. Setup Monitoring
+Refer to the [Monitoring README](Monitoring/readme.md) for instructions on setting up Monitoring with Prometheus.
+
+### 8. Create the Replica-set
 ```sh
 kubectl apply -f replica-set.yaml --namespace mongodb
 ```
 
-#### 7.1. Check Pod Scheduling
+#### 8.1. Check Pod Scheduling
 Verify that the pods were scheduled as expected:
 ```sh
 kubectl get pods -o wide --namespace mongodb
@@ -147,7 +150,7 @@ rs-0-2                                         1/1     Running
 ```
 It may take a few minutes for all pods up
 
-### 8. Create the users
+### 9. Create the users
 For testing purposes, passwords are literal, you can use the external secret technique to store the users password
 ```sh
 kubectl create secret generic user1-secret --from-literal="password=123456" --namespace mongodb
@@ -157,9 +160,9 @@ kubectl create secret generic user3-secret --from-literal="password=123456" --na
 kubectl apply -f users.yaml --namespace mongodb
 ```
 
-### 9. Connect
+### 10. Connect
 
-#### 9.1 Inside kubernetes envrionment
+#### 10.1 Inside kubernetes envrionment
 1 - Get users credentials and connection string
 ```sh
 kubectl get secret rs-0-admin-admin --namespace mongodb -o json | jq -r '.data | with_entries(.value |= @base64d)'
@@ -178,9 +181,19 @@ kubectl exec -it -n mongodb rs-0-0 -c mongodb-enterprise-database -- bash
     "mongodb+srv://admin:123456@rs-0-svc.mongodb.svc.cluster.local/admin?ssl=true"
 ```
 
+#### 10.2 Inside local envrionment
+1 - Forward the port
+```sh
+kubectl --namespace mongodb port-forward rs-0-1 27017:27017 &
+kubectl --namespace opentelemetry port-forward svc/collector-collector 4317:4317 &
+```
 
-### 9. Setup Monitoring (OPTIONAL)
-Refer to the [Monitoring README](Monitoring/readme.md) for instructions on setting up Monitoring with Prometheus.
+2 - Copy the `ca.crt` content from the secret `mdb-rs-0-cert`
+
+3 - connect
+```sh
+mongodb://admin:123456@localhost:27017/admin?directConnection=true&tls=true&tlsCAFile=ca.pem
+```
 
 # Clean
 ```sh

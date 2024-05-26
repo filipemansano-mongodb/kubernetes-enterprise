@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shell-access
+  namespace: mongodb
+spec:
+  containers:
+  - name: shell-access
+    image: localhost:5000/cron-app
+    command: ["/bin/bash", "-c", "--"]
+    args: ["while true; do sleep 30; done;"]
+  restartPolicy: Always

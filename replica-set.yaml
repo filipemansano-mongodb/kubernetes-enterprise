@@ -7,7 +7,24 @@ metadata:
     type: database
     app: mongodb
 spec:
-  members: 3
+  members: 4
+  memberConfig:
+    - votes: 1
+      priority: "1"
+      tags:
+        nodeType: "ELECTABLE"
+    - votes: 1
+      priority: "1.5"
+      tags:
+        nodeType: "ELECTABLE"
+    - votes: 1
+      priority: "1.5"
+      tags:
+        nodeType: "ELECTABLE"
+    - votes: 0
+      priority: "0"
+      tags:
+        nodeType: "HIDDEN"
   version: "7.0.9-ent"
   featureCompatibilityVersion: "7.0"
 

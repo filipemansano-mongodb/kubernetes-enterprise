@@ -18,6 +18,9 @@ spec:
   - rs-0-1.rs-0-svc.mongodb.svc.cluster.local
   - rs-0-2
   - rs-0-2.rs-0-svc.mongodb.svc.cluster.local
+  - rs-0-3
+  - rs-0-3.rs-0-svc.mongodb.svc.cluster.local
+  - localhost
   duration: 240h0m0s
   issuerRef:
     name: mongodb-ca-issuer
