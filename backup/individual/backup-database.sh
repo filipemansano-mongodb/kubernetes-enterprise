@@ -1,7 +1,7 @@
 set -e
 
 echo "getting secrets from admin user..."
-CONNECTION_INFO=$(kubectl get secret rs-0-admin-admin -n mongodb -o json | jq  -r '.data | with_entries(.value |= @base64d)')
+CONNECTION_INFO=$(kubectl get secret rs-0-admin-admin -n mongodb -o json | jq -r '.data | map_values(@base64d)')
 
 echo "getting the CA"
 kubectl get secret mdb-rs-0-cert -n mongodb -o json | jq -r '.data["ca.crt"]' | base64 -d > ca.pem
@@ -34,7 +34,7 @@ mongodump \
 
 echo "dump completed successfully."
 
-unlock_db()
+unlock_db
 
 tar -czvf bkp_teste.gz /dump/test
 
