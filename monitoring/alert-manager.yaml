@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: webhook-config
+  namespace: prometheus
+spec:
+  route:
+    groupBy: ['alertname']
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 12h
+    receiver: 'webhook'
+    routes:
+      - match:
+          alertname: HighNumberOfActiveConnections
+        receiver: 'webhook'
+  receivers:
+    - name: 'webhook'
+      webhookConfigs:
+        - url: 'http://webhook-service.default.svc.cluster.local:5000/'

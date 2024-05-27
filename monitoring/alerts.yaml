@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: mongodb-alerts
+  namespace: prometheus
+spec:
+  groups:
+  - name: mongodb.rules
+    rules:
+    - alert: HighNumberOfActiveConnections
+      expr: mongodb_connections_active > 1000
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "High number of active MongoDB connections"
+        description: "The number of active MongoDB connections has exceeded 1000."

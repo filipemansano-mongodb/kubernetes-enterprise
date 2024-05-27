@@ -11,12 +11,6 @@ HIDDEN_MEMBER=$(mongosh --tls --tlsCAFile ca.pem --eval 'rs.config().members.fil
 USERNAME=$(echo $CONNECTION_INFO | jq -r '.["username"]')
 PASSWORD=$(echo $CONNECTION_INFO | jq -r '.["password"]')
 
-unlock_db() {
-  echo "Unlocking the database..."
-  mongosh --tls --tlsCAFile ca.pem --eval 'db.fsyncUnlock()' ${HIDDEN_MEMBER} --username $USERNAME --password $PASSWORD
-}
-
-trap unlock_db EXIT
 
 mongosh --tls --tlsCAFile ca.pem --eval 'db.fsyncLock()' ${HIDDEN_MEMBER} --username $USERNAME --password $PASSWORD
 
@@ -29,12 +23,9 @@ mongodump \
   --sslCAFile=ca.pem \
   --authenticationDatabase=admin \
   --db=test \
-  --out=/dump \
-  --gzip
+  --out=/dump
 
 echo "dump completed successfully."
-
-unlock_db
 
 tar -czvf bkp_teste.gz /dump/test
 
